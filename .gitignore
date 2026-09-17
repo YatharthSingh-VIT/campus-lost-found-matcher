@@ -1,0 +1,13 @@
+out/
+test-out/
+.vscode/
+__pycache__/
+*.class
+*.zip
+data/*
+!data/items.csv
+*.lock
+*.tmp
+.DS_Store
+.idea/
+*.iml
