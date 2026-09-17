@@ -1,0 +1,8 @@
+id,type,title,description,category,location,date,contact,status
+L001,LOST,Blue steel bottle,Blue steel bottle with moon sticker,OTHER,Central Library,2026-09-01,Demo desk A,OPEN
+F001,FOUND,Blue steel bottle,Blue steel bottle with moon sticker,OTHER,Central Library,2026-09-02,Demo desk B,OPEN
+F002,FOUND,Blue bottle,Blue plastic bottle,OTHER,Cafeteria,2026-09-03,Demo desk C,OPEN
+L002,LOST,Black laptop sleeve,Black laptop sleeve with red zip,BAGS,Academic Block,2026-09-02,Demo desk D,OPEN
+F003,FOUND,Black laptop sleeve,Black laptop sleeve with red zip,BAGS,Academic Block,2026-09-04,Demo desk E,OPEN
+L003,LOST,Room keys,Two silver keys on green ring,KEYS,Hostel Gate,2026-09-01,Demo desk F,RESOLVED
+F004,FOUND,Room keys,Two silver keys on green ring,KEYS,Hostel Gate,2026-09-01,Demo desk G,RESOLVED
