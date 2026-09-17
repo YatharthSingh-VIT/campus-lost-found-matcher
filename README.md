@@ -1,154 +1,140 @@
 # Campus Lost & Found Matcher
 
-A Java command-line app for a shared campus help desk. Students can record lost or
-found items, search existing reports, and see possible matches with a score breakdown.
+A Java terminal application for recording lost and found items on campus. It keeps reports in one place, suggests possible matches, and shows how each match was scored.
 
-**Student:** Yatharth Singh
+| Project details | |
+| --- | --- |
+| Student | Yatharth Singh |
+| Registration number | 25BAI10657 |
+| Course | Programming in Java |
+| Platform | Command line, Java 21 or later |
+| Storage | Local CSV files |
 
-**Registration:** 25BAI10657
+## What the application does
 
-**Course:** Programming in Java
+- **Manage reports:** create, view, edit, delete, resolve, and reopen lost or found reports.
+- **Find possible matches:** compare category, location, dates, and description keywords. Results include the points awarded for each factor.
+- **Search and review:** combine filters and view totals by report type, status, and category.
 
-## Features
+The application is intended for a shared campus help-desk terminal. A match is a suggestion for someone to investigate; ownership must still be checked in person.
 
-1. **Report management:** add, view, edit, delete, resolve, and reopen reports.
-2. **Matching:** rank possible lost/found pairs using category, location, incident
-   date, and keywords. Show why each candidate received its score.
-3. **Search and reporting:** combine filters and view counts by type, status, and category.
+## Requirements
 
-Reports are saved in a local UTF-8 CSV file. The app validates input, handles save
-errors, and prevents two app instances from editing the same dataset. No GUI is needed.
+Install **JDK 21 or later** and make sure both `java` and `javac` are available in your terminal. A JRE alone cannot compile the project.
 
-## Setup
+```sh
+java -version
+javac -version
+```
 
-1. Install **JDK 21 or newer**. Both `java` and `javac` must be on `PATH`.
-   A JRE alone is not enough. An installation guide is available from
-   [Microsoft OpenJDK](https://learn.microsoft.com/en-us/java/openjdk/install).
-2. Open a new terminal and check:
+Both commands must report version 21 or later. See the [Microsoft OpenJDK installation guide](https://learn.microsoft.com/en-us/java/openjdk/install) if you need to install a JDK.
 
-   ```sh
-   java -version
-   javac -version
-   ```
+No Maven, Gradle, external Java libraries, database server, or API keys are required. The folder used for data must be writable.
 
-   Both must report version 21 or newer.
-3. Clone this repository or extract its ZIP. Open a terminal in the folder
-   containing this README. In Antigravity/Vs Code, use **File > Open Folder** to select it.
-4. No external Java libraries, Maven, Gradle, database server, accounts, or API keys
-   are needed. The data folder must be writable.
+## Setup and first run
 
-The project was tested on Windows with Microsoft OpenJDK 21.0.12. Commands for
-macOS/Linux are included; those operating systems have not been tested.
+1. Download and extract the repository ZIP, or clone the repository using an account with access.
+2. Open a terminal in the extracted project folder. You should see `README.md`, `sources.txt`, and the `src` folder there.
+3. Run the appropriate command below. The script compiles the code and starts the application with seven fictional sample reports.
 
-## Run
-
-Windows, from PowerShell or Command Prompt:
+**Windows - PowerShell or Command Prompt**
 
 ```powershell
 .\run.cmd --demo --plain
 ```
 
-macOS/Linux:
+**macOS or Linux**
 
 ```sh
 sh run.sh --demo --plain
 ```
 
-These scripts compile the source and start the app. Omit `--demo` to use the empty
-default dataset in `data/items.csv`. Omit `--plain` for optional terminal styling.
+To start with an empty dataset, omit `--demo`. Saved reports are loaded again on the next run.
 
-To compile and run directly from the project root:
+An IDE is optional. In Antigravity, open the folder containing this README and use its terminal for the same commands.
+
+### Compile and run without scripts
+
+Run these commands from the project root:
 
 ```sh
 javac -encoding UTF-8 --release 21 -d out "@sources.txt"
 java -Dfile.encoding=UTF-8 -cp out com.lostfound.app.Main --demo --plain
 ```
 
-Keep the quotes around `@sources.txt` in PowerShell. Recompile after changing Java code.
+Keep the quotes around `@sources.txt` in PowerShell. Recompile whenever the Java source changes.
 
-## Options and data
+## A short demonstration
 
-| Option | Purpose |
+With the original demo data:
+
+| Action | Input | Expected result |
+| --- | --- | --- |
+| Find matches | Choose `3`, enter `L001` | `F001`: **99/100**; `F002`: **63/100** |
+| Search reports | Choose `4`, enter `bottle`, leave the other filters blank | Three reports |
+| View statistics | Choose `5` | Seven reports: three lost, four found, five open, two resolved |
+| Exit | Choose `0` | Application closes |
+
+Choose `1` to add a report or `2` to manage an existing report. Enter dates as `YYYY-MM-DD`. Lists show five records at a time; press Enter when prompted to continue.
+
+The demo is editable. If its results differ after you have changed reports, close the application and copy `examples/items.csv` over `data/demo-items.csv` to restore the sample data. This replaces any demo edits.
+
+## Data and command-line options
+
+| Option | Behaviour |
 | --- | --- |
-| `--demo` | Copy fictional examples to `data/demo-items.csv` on first use. Later runs keep your demo edits. |
-| `--data "path/to/items.csv"` | Use a different CSV file. Cannot be combined with `--demo`. |
-| `--plain` | Use ASCII borders with no ANSI colours. |
-| `--color` | Force colour and Unicode borders on a compatible terminal. |
-| `--help` | Show usage and exit. |
+| `--demo` | Creates `data/demo-items.csv` from the examples on first use, then keeps subsequent changes. |
+| `--data "path/to/items.csv"` | Uses a separate CSV file. Cannot be combined with `--demo`. |
+| `--plain` | Uses ASCII borders without colour. |
+| `--color` | Enables colour and Unicode borders on compatible terminals. |
+| `--help` | Prints the usage information. |
 
-`--plain` takes priority over `--color`. The `NO_COLOR` environment variable also
-disables styling. Completed changes save immediately. Exiting during an unfinished
-form discards that form.
+Without a data option, reports are stored in `data/items.csv`. The supplied file contains only the column header. Each completed change is saved immediately; an unfinished form is discarded if input ends.
 
-The default dataset is header-only. `examples/items.csv` contains seven fictional
-reports. To reset a demo, close the app and copy that example file over
-`data/demo-items.csv`. Keep real reports outside the repository with `--data`.
+`--plain` overrides `--color`. Setting the `NO_COLOR` environment variable also disables styling. Use a UTF-8 terminal for accented characters. Keep real student records outside the repository using `--data`.
 
-## Try the demo
+## How matching works
 
-1. Start with `--demo --plain`.
-2. Choose **3**, then enter **L001**. You should see **F001 at 99/100** and
-   **F002 at 63/100** with their score breakdowns.
-3. Choose **4**, enter `bottle`, and leave the other filters blank to find three reports.
-4. Choose **5** for statistics. The untouched demo has seven reports: three lost,
-   four found, five open, and two resolved.
-5. Choose **0** to exit.
+The application compares open reports of opposite types in the same category. The found date must be on or after the lost date, with a gap of no more than 30 days. A report cannot match another report with the same ID; ID checks ignore letter case.
 
-Choose **2** to edit, resolve, reopen, or delete a report. Lists pause after five
-records; press Enter for the next page. Use a full report ID when opening details.
+| Factor | Points |
+| --- | ---: |
+| Same category | 35 |
+| Same location, ignoring case and extra spaces | 25 |
+| Date proximity | `round(25 × (30 − day gap) / 30)` |
+| Shared keywords | `round(15 × shared words / distinct words across both reports)` |
 
-![Matching results captured from the CLI](docs/results/matching.png)
+Keywords come from the title and description. Repeated words count once. Punctuation, short tokens, and a small set of common words are removed. If both keyword sets are empty, the keyword score is zero.
 
-This image renders actual program output; it is not a desktop screenshot.
+Results scoring **60 or more** are shown in score order. Ties use the smaller date gap, then the candidate ID. These rules and weights are fixed design choices; the score is not a probability of ownership.
 
-## Tests
+## Testing
 
-Windows:
+All automated checks are in `test/ProjectTest.java`.
+
+**Windows**
 
 ```powershell
 .\test.cmd
 ```
 
-macOS/Linux:
+**macOS or Linux**
 
 ```sh
 sh test.sh
 ```
 
-The scripts compile and run dependency-free Java tests. They use temporary data
-and leave real and demo reports alone. A failed check exits with a nonzero code.
-Success ends with **`SUCCESS: 77 checks passed.`** No JUnit or `-ea` flag is needed.
+The scripts compile the application and tests, then print each check. A successful run ends with:
 
-Checks cover CRUD, matching scores and boundaries, combined filters, dates, quoted
-CSV, duplicate IDs, restart persistence, file locking, failed saves, and complete
-CLI workflows. A benchmark also ranks 10,000 candidates for one report. Its timing
-is a local sample, not an accuracy result or a guarantee on other machines.
+```text
+SUCCESS: 77 checks passed.
+```
 
-Final recorded run: **77/77 passed on 15 September 2026**, with no compiler warnings
-under `--release 21 -Xlint:all`. See [test output](docs/results/tests.txt).
+The checks cover matching rules, invalid input, report operations, CSV persistence, duplicate IDs, file locking, failed saves, and complete terminal workflows. A timing check also ranks 10,000 sample candidates for one report. Tests use temporary files and do not change the normal or demo datasets. A failure produces a nonzero exit code.
 
-## Matching rules
+Testing was performed on Windows with Microsoft OpenJDK 21.0.12. The macOS/Linux commands are provided but have not been verified on those systems. Detailed results and limitations are recorded in the project report.
 
-Candidates must be open reports of opposite types in the same category. The found
-date must be on or after the lost date, within 30 days. Report IDs are compared
-without regard to letter case.
-
-| Evidence | Points |
-| --- | ---: |
-| Same category, required | 35 |
-| Same normalized location | 25 |
-| Date proximity | `round(25 * (30 - days) / 30)` |
-| Keyword overlap | `round(15 * intersection / union)` |
-
-Keywords come from the title and description. They are lowercased, split on
-punctuation, and stored as sets. Short tokens and a small list of common words are
-removed. Empty keyword sets earn zero points. Locations ignore case and extra spaces.
-
-Scores of **60 or more** are shown in descending order, then by smaller day gap,
-then by ID. The weights are design choices, not values trained on a campus dataset.
-A score suggests a possible match; it does not prove ownership.
-
-## Project structure
+## File structure
 
 ```text
 lost-found-matcher/
@@ -156,9 +142,9 @@ lost-found-matcher/
 ├── statement.md
 ├── .gitignore
 ├── .gitattributes
+├── sources.txt
 ├── run.cmd / run.sh
 ├── test.cmd / test.sh
-├── sources.txt / test-sources.txt
 ├── data/items.csv
 ├── examples/items.csv
 ├── src/com/lostfound/
@@ -167,53 +153,32 @@ lost-found-matcher/
 │   ├── service/Matcher.java, ReportService.java
 │   ├── storage/FileManager.java
 │   └── util/ConsoleUI.java, ValidationUtil.java, InvalidInputException.java
-├── test/com/lostfound/
-│   ├── TestRunner.java, TestSupport.java, CliTest.java
-│   ├── service/MatcherTest.java, ReportServiceTest.java
-│   ├── storage/FileManagerTest.java
-│   └── util/ValidationUtilTest.java
-└── docs/
-    ├── project-report.pdf
-    ├── requirements.md
-    ├── storage-design.md
-    ├── diagrams/  (six diagrams)
-    └── results/   (test output and two CLI result images)
+├── test/ProjectTest.java
+└── docs/project-report.pdf
 ```
 
-`out/`, `test-out/`, local editor settings, demo working data, and lock files are
-generated locally and excluded from Git. The hidden `.git` folder holds version
-history; keep it when working with Git.
+There are ten application source files and one test source file. Compilation creates `out` and `test-out`; these folders are excluded from Git along with local editor settings and working demo files.
 
-## Design and report
+The [problem statement](statement.md) describes the scope and intended users. The [project report](docs/project-report.pdf) contains the required 15 sections, six design diagrams, storage schema, sample output, and testing results.
 
-- [Requirements and acceptance criteria](docs/requirements.md)
-- [Storage schema](docs/storage-design.md)
-- [Architecture](docs/diagrams/architecture.png), [workflow](docs/diagrams/workflow.png),
-  [use cases](docs/diagrams/use-case.png), [classes](docs/diagrams/class.png),
-  [sequence](docs/diagrams/sequence.png), [ER/storage](docs/diagrams/er.png)
-- [Project report: all 15 required sections](docs/project-report.pdf)
-- [Statistics output](docs/results/statistics.png)
+## Limitations and troubleshooting
 
-## Limits and troubleshooting
+This version stores all reports locally. Different installations do not share data. There are no user accounts, notifications, image matching, or automatic ownership checks. Searches scan reports in memory, and each saved change rewrites the CSV file.
 
-This is a shared-terminal prototype. Separate copies do not synchronize. CSV is
-plaintext, and there are no accounts or automatic ownership checks. All records
-are loaded into memory, and each change rewrites the file. Use a writable local
-filesystem that supports atomic file replacement.
+| Problem | What to check |
+| --- | --- |
+| `javac` is not found | Install a JDK, add its `bin` folder to `PATH`, and reopen the terminal. |
+| Release 21 is not supported | Check which compiler `javac -version` reports. |
+| Main class cannot be found | Compile first and run from the project root. |
+| Data file is locked | Close the other application instance using the same dataset. |
+| CSV cannot be loaded | Back up the file and correct the row identified in the error. |
+| Saving fails | Check folder permissions and use a local filesystem that supports atomic file replacement. |
+| Borders or colours display incorrectly | Start with `--plain`. |
 
-- **`javac` not found:** install a JDK, check `PATH`, and reopen the terminal.
-- **Release 21 not supported:** the active compiler is too old.
-- **Main class not found:** compile first and run from the project root.
-- **File locked:** close the other instance using that CSV. A leftover lock file
-  alone is harmless; the operating-system lock is released on exit.
-- **Invalid CSV:** back up the file and repair the row shown in the error. The app
-  stops loading instead of silently removing invalid records.
-- **Save failed:** check file permissions and atomic-move support. A failed save
-  does not change the service's current in-memory list.
-- **Garbled borders:** use `--plain` and a UTF-8 terminal for non-ASCII report text.
+Invalid CSV files are left unchanged. Failed saves leave the service's current records unchanged. The app requires atomic file replacement; it reports an error when that operation is unsupported.
 
 ## References
 
-Java references: [javac](https://docs.oracle.com/en/java/javase/21/docs/specs/man/javac.html),
-[LocalDate](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/LocalDate.html),
-and [Files](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/file/Files.html).
+- [Oracle: javac command](https://docs.oracle.com/en/java/javase/21/docs/specs/man/javac.html)
+- [Oracle: LocalDate](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/LocalDate.html)
+- [Oracle: Files](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/file/Files.html)
