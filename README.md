@@ -51,7 +51,7 @@ sh run.sh --demo --plain
 
 To start with an empty dataset, omit `--demo`. Saved reports are loaded again on the next run.
 
-An IDE is optional. In Antigravity, open the folder containing this README and use its terminal for the same commands.
+An IDE is optional. In Vs Code, open the folder containing this README and use its terminal for the same commands.
 
 ### Compile and run without scripts
 
